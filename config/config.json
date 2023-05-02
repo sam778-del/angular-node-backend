@@ -1,0 +1,44 @@
+{
+  "development": {
+      "username": "postgres",
+      "password": "@Korea2022",
+      "database": "role-app",
+      "host": "127.0.0.1",
+      "dialect": "postgresql",
+      "pool": {
+          "max": 20,
+          "min": 0,
+          "acquire": 60000,
+          "idle": 60000,
+          "evict": 60000
+      }
+  },
+  "test": {
+      "username": "postgres",
+      "password": "@Korea2022",
+      "database": "role-app",
+      "host": "127.0.0.1",
+      "dialect": "postgresql",
+      "pool": {
+          "max": 20,
+          "min": 0,
+          "acquire": 60000,
+          "idle": 60000,
+          "evict": 60000
+      }
+  },
+  "production": {
+      "username": "postgres",
+      "password": "@Korea2022",
+      "database": "role-app",
+      "host": "127.0.0.1",
+      "dialect": "postgresql",
+      "pool": {
+          "max": 20,
+          "min": 0,
+          "acquire": 60000,
+          "idle": 60000,
+          "evict": 60000
+      }
+  }
+}
