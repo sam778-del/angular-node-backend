@@ -32,12 +32,20 @@ const authenticateFacebook = async (req, res) => {
             }
         });
 
-        if (!user) {
+        let roleID = await Role.findOne({
+            where: {
+                name: 'user'
+            }
+        });
+
+        console.log(roleID.id);
+
+        if (!user && roleID) {
             user = await User.create({
                 email: facebookUser.email,
                 name: facebookUser.first_name + ' ' + facebookUser.last_name,
                 facebookId: facebookUser.id,
-                role: 'user' // assign default role of 'user'
+                role: roleID.id // assign default role of 'user'
             });
         }
 
@@ -53,10 +61,17 @@ const authenticateFacebook = async (req, res) => {
 }
 
 const validateAccesstoken = async (req, res) => {
-    const accessToken = req.headers.authorization.split(' ')[1];
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+        return res.status(401).json({ error: 'Missing authorization header' });
+    }
 
     try {
-        const decoded = await jwt.verify(accessToken, secret);
+        const token = authorizationHeader.split(' ')[1];
+        const decodedToken = await jwt.verify(token, secret);
+        if (!decodedToken) {
+            return res.status(401).json({ error: 'Invalid authorization token' });
+        }
         res.json({ valid: true, decoded });
     } catch (error) {
         res.status(401).json({ valid: false, error: 'Invalid access token' });
@@ -76,7 +91,8 @@ const getAllUsers = async (req, res) => {
         }
 
         const users = await User.findAll({
-            attributes: ['id', 'email', 'name', 'role']
+            attributes: ['id', 'email', 'name', 'role_id'],
+            include: Role
         });
         res.json(users);
     } catch (error) {
@@ -97,7 +113,7 @@ const createUser = async (req, res) => {
             return res.status(401).json({ error: 'Invalid authorization token' });
         }
 
-        const { email, password, name, role = 'user' } = req.body;
+        const { email, password, name, role } = req.body;
 
         // Validate request
         const errors = validationResult(req);
@@ -121,7 +137,7 @@ const createUser = async (req, res) => {
             email,
             password: hashedPassword,
             name,
-            role
+            role_id: role
         });
 
         // Send response with JWT access token

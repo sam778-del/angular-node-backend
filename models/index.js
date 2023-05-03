@@ -40,4 +40,8 @@ db.roles = require('./role.js')(sequelize, Sequelize);
 db.permissions = require('./permission.js')(sequelize, Sequelize);
 db.role_permissions = require('./rolepermission.js')(sequelize, Sequelize);
 
+
+db.users.belongsTo(db.roles, { foreignKey: 'role_id' });
+db.roles.hasMany(db.users, { foreignKey: 'role_id' });
+
 module.exports = db;

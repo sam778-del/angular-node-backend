@@ -19,11 +19,15 @@ module.exports = {
         allowNull: true,
         unique: true
       },
-      role: {
-        type: DataTypes.STRING,
+      role_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       facebookId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      role: {
         type: DataTypes.STRING,
         allowNull: true,
       },
